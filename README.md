@@ -46,6 +46,40 @@ reviewflow pr:list owner/repo --state open --limit 20
 reviewflow analyze https://github.com/owner/repo/pull/123
 ```
 
+## GitHub Actions Integration
+
+Automatically analyze every PR with ReviewFlow in your CI/CD pipeline:
+
+```yaml
+name: ReviewFlow
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install ReviewFlow
+        run: npm install -g reviewflow
+      
+      - name: Analyze PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          reviewflow analyze "${{ github.event.pull_request.html_url }}" \
+            --output json
+```
+
+See [examples/github-actions-integration.md](examples/github-actions-integration.md) for advanced patterns including:
+- Pre-merge validation
+- Scheduled nightly reviews
+- Release gate checks
+- Slack notifications
+
 ## Commands
 
 ### `reviewflow auth`
@@ -134,6 +168,14 @@ npm test
 ## License
 
 MIT
+
+## Examples
+
+See the [examples/](examples/) directory for:
+
+- **[GitHub Actions Integration](examples/github-actions-integration.md)** - CI/CD workflows for PR analysis
+- **[Pre-commit Hook](examples/pre-commit-hook.sh)** - Local validation before push
+- **[CI Pipeline Integration](examples/ci-integration.md)** - GitLab, Jenkins, CircleCI, Azure Pipelines, Bitbucket
 
 ---
 
