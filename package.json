@@ -1,16 +1,17 @@
 {
   "name": "reviewflow",
-  "description": "A new CLI generated with oclif",
-  "version": "0.0.0",
-  "author": "Tolga Berk",
+  "description": "AI-powered code review triage — stop reviewing AI-generated garbage",
+  "version": "0.1.0",
+  "author": "Tolga Berk @ Auto Company",
   "bin": {
     "reviewflow": "./bin/run.js"
   },
-  "bugs": "https://github.com/reviewflow-cli/reviewflow/issues",
+  "bugs": "https://github.com/eylulsenakumral/reviewflow-cli/issues",
   "dependencies": {
     "@oclif/core": "^4",
     "@oclif/plugin-help": "^6",
-    "@oclif/plugin-plugins": "^5"
+    "@oclif/plugin-plugins": "^5",
+    "octokit": "^4"
   },
   "devDependencies": {
     "@eslint/compat": "^1",
@@ -37,9 +38,14 @@
     "./dist",
     "./oclif.manifest.json"
   ],
-  "homepage": "https://github.com/reviewflow-cli/reviewflow",
+  "homepage": "https://github.com/eylulsenakumral/reviewflow-cli",
   "keywords": [
-    "oclif"
+    "oclif",
+    "code-review",
+    "github",
+    "pull-request",
+    "triage",
+    "cli"
   ],
   "license": "MIT",
   "main": "dist/index.js",
@@ -52,14 +58,9 @@
       "@oclif/plugin-help",
       "@oclif/plugin-plugins"
     ],
-    "topicSeparator": " ",
-    "topics": {
-      "hello": {
-        "description": "Say hello to the world and others"
-      }
-    }
+    "topicSeparator": " "
   },
-  "repository": "reviewflow-cli/reviewflow",
+  "repository": "eylulsenakumral/reviewflow-cli",
   "scripts": {
     "build": "shx rm -rf dist && tsc -b",
     "lint": "eslint",

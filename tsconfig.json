@@ -1,18 +1,23 @@
 {
-  "extends": "@oclif/tsconfig",
   "compilerOptions": {
-    "declaration": true,
-    "module": "Node16",
-    "outDir": "dist",
-    "rootDir": "src",
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "lib": ["ES2022"],
+    "outDir": "./dist",
+    "rootDir": "./src",
     "strict": true,
-    "target": "es2022",
-    "moduleResolution": "node16",
     "esModuleInterop": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "resolveJsonModule": true,
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    "types": ["node"]
   },
-  "include": ["./src/**/*"],
-  "exclude": ["node_modules"],
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"],
   "ts-node": {
     "esm": true
   }
