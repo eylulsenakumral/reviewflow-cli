@@ -1,0 +1,79 @@
+# Example workflow: Using ReviewFlow in your CI pipeline
+# This demonstrates how to integrate ReviewFlow CLI for PR analysis
+
+name: ReviewFlow PR Analysis
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  reviewflow-analyze:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    # Only run on PRs from the same repository (skip forks for security)
+    if: github.event.pull_request.head.repo.full_name == github.repository
+
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for better analysis
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
+
+      # Install ReviewFlow globally (or use npx)
+      - name: Install ReviewFlow
+        run: npm install -g @eylulsenakumral/reviewflow-cli
+
+      # Step 1: Analyze the current PR
+      # This runs ReviewFlow's analysis on the PR diff
+      - name: Analyze PR with ReviewFlow
+        run: |
+          reviewflow analyze \
+            --repo ${{ github.repository }} \
+            --pr ${{ github.event.number }} \
+            --token ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Step 2 (optional): Post comment with findings
+      # ReviewFlow can post a summary comment on the PR
+      - name: Comment PR with results
+        if: success()
+        run: |
+          reviewflow comment \
+            --repo ${{ github.repository }} \
+            --pr ${{ github.event.number }} \
+            --token ${{ secrets.GITHUB_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Step 3 (optional): Generate report as artifact
+      # Saves the analysis as a downloadable artifact
+      - name: Upload analysis report
+        uses: actions/upload-artifact@v4
+        with:
+          name: reviewflow-report
+          path: reviewflow-report.json
+          retention-days: 30
+
+# Alternative: Run ReviewFlow on push to main (post-merge analysis)
+# on:
+#   push:
+#     branches: [main]
+#
+# jobs:
+#   reviewflow-postmerge:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v4
+#       - uses: actions/setup-node@v4
+#         with:
+#           node-version: 20.x
+#       - run: npm install -g @eylulsenakumral/reviewflow-cli
+#       - run: reviewflow analyze --last-commit --token ${{ secrets.GITHUB_TOKEN }}

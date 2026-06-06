@@ -51,10 +51,44 @@ reviewflow pr:list owner/repo
 reviewflow pr:list owner/repo --state open --limit 20
 ```
 
-### 3. Analyze a Pull Request (Coming Soon)
+### 3. Analyze a Pull Request
 
 ```bash
 reviewflow analyze https://github.com/owner/repo/pull/123
+reviewflow analyze https://github.com/owner/repo/pull/123 --detailed
+reviewflow analyze https://github.com/owner/repo/pull/123 --format markdown
+```
+
+**Example output:**
+```
+🔍 ReviewFlow CLI v0.2.0
+
+PR #94498: [tubopack] migrate rcstr! to use scattered collect
+Author: @lukesandberg
+Repository: vercel/next.js
+
+┌─────────────────────────────────────────────────┐
+│RISK LEVEL: LOW   ✅                              │
+│Review Effort: 2-5 minutes                                 │
+└─────────────────────────────────────────────────┘
+
+Why this is low risk:
+
+Files changed:
+  5 files, +103/-36 lines
+  Code: 3 | Tests: 0 | Docs: 0 | Config: 2
+
+File details:
+  ✅ Cargo.lock (~66, -13)
+  ✅ Cargo.toml (~2, -1)
+  ✅ turbopack/crates/turbo-rcstr-macros/src/lib.rs (~2, -2)
+  ✅ turbopack/crates/turbo-rcstr/Cargo.toml (~1, -1)
+  ✅ turbopack/crates/turbo-rcstr/src/lib.rs (~32, -19)
+
+Recommendation:
+  QUICK REVIEW - Minor changes, a quick skim should suffice.
+
+View PR: https://github.com/vercel/next.js/pull/94498
 ```
 
 ## GitHub Actions Integration
@@ -127,28 +161,33 @@ Analyze a pull request for review triage.
 - `PR_URL` - Full GitHub PR URL
 
 **Flags:**
-- `--detailed` - Show detailed file-by-file analysis (coming soon)
+- `--detailed` - Show detailed file-by-file analysis
+- `--format` - Output format: `console`, `json`, `markdown` (default: `console`)
 
-**Example:**
+**Examples:**
 ```bash
-reviewflow analyze https://github.com/owner/repo/pull/123
+reviewflow analyze https://github.com/vercel/next.js/pull/94498
+reviewflow analyze https://github.com/owner/repo/pull/123 --detailed
+reviewflow analyze https://github.com/owner/repo/pull/123 --format markdown
 ```
 
 ## Current Status
 
-### ✅ v0.1.0 (Available Now)
-- GitHub authentication via PAT
-- PR URL parsing and validation
-- `pr:list` command (stub, implementation in progress)
-- `analyze` command (stub, implementation in progress)
-- Basic CLI structure with oclif
+### ✅ v0.2.0 (Available Now)
+- ✅ **Real PR analysis** — Fetches and analyzes real GitHub PRs
+- ✅ **Risk categorization** — High/medium/low risk scoring
+- ✅ **File change analysis** — Categorizes by type (code, test, docs, config)
+- ✅ **Review effort estimation** — Time estimates for review
+- ✅ **Multiple output formats** — Console, JSON, Markdown
+- ✅ **Detailed mode** — File-by-file breakdown
+- ✅ **Works without authentication** — Public repos supported
 
 ### 🔜 Coming Soon
-- Real PR fetching via GitHub API
-- File change categorization (high/medium/low risk)
 - LLM-based change summarization (Claude API)
-- Review effort estimation
-- Output formats: JSON, table, markdown
+- Batch PR analysis for repo backlogs
+- `pr:list` command for repo-wide triage
+- Risk threshold filtering
+- Custom risk rules per repo
 
 ## Development
 

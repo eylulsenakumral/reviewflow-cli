@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"node bin/run.js analyze https://github.com/vercel/next.js/pull/62000 --format markdown 2>&1\",\"timeout\":30000,\"description\":\"Test with real Next.js PR\"}",
+  "error": "Exit code 2\n ›   Error: PR not found: vercel/next.js#62000",
+  "timestamp": "2026-06-06T06:46:41.746Z",
+  "retry_count": 2
+}

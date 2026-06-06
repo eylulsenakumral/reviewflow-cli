@@ -1,10 +1,13 @@
 {
-  "name": "reviewflow",
+  "name": "@eylulsenakumral/reviewflow-cli",
   "description": "AI-powered code review triage — stop reviewing AI-generated garbage",
   "version": "0.2.0",
   "author": "Tolga Berk @ Auto Company",
   "bin": {
     "reviewflow": "./bin/run.js"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "bugs": "https://github.com/eylulsenakumral/reviewflow-cli/issues",
   "dependencies": {
