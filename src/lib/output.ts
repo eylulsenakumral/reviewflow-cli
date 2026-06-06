@@ -195,14 +195,89 @@ export function formatMarkdown(result: AnalysisResult): string {
 }
 
 /**
+ * Escape a CSV field value
+ * Handles commas, quotes, and newlines by wrapping in double quotes and escaping existing quotes
+ */
+function escapeCSV(value: string): string {
+  if (!value) return '""'
+
+  // If field contains comma, quote, or newline, wrap in quotes and escape quotes
+  if (value.includes(',') || value.includes('"') || value.includes('\n') || value.includes('\r')) {
+    return `"${value.replace(/"/g, '""')}"`
+  }
+
+  return value
+}
+
+/**
+ * Format CSV output
+ * Standard CSV with header row and quoted values for special characters
+ */
+export function formatCSV(result: AnalysisResult): string {
+  const lines: string[] = []
+
+  // Header row
+  lines.push(
+    [
+      'pr_number',
+      'title',
+      'author',
+      'repository',
+      'risk_level',
+      'risk_score',
+      'review_effort',
+      'files_total',
+      'lines_added',
+      'lines_deleted',
+      'lines_changed',
+      'code_files',
+      'test_files',
+      'docs_files',
+      'config_files',
+      'sensitive_paths',
+      'recommendation',
+      'pr_url',
+    ].join(','),
+  )
+
+  // Data row
+  lines.push(
+    [
+      String(result.pr.number),
+      escapeCSV(result.pr.title),
+      escapeCSV(result.pr.author),
+      escapeCSV(result.pr.repository),
+      result.risk.level,
+      String(Math.round(result.risk.score * 10) / 10),
+      escapeCSV(result.risk.effort),
+      String(result.files.total),
+      String(result.files.lines_added),
+      String(result.files.lines_deleted),
+      String(result.files.lines_changed),
+      String(result.files.by_type.code),
+      String(result.files.by_type.test),
+      String(result.files.by_type.docs),
+      String(result.files.by_type.config),
+      escapeCSV(result.files.sensitive_paths.join('; ')),
+      escapeCSV(result.recommendation),
+      escapeCSV(result.pr.url),
+    ].join(','),
+  )
+
+  return lines.join('\n')
+}
+
+/**
  * Format output based on format type
  */
-export function formatOutput(result: AnalysisResult, format: 'console' | 'json' | 'markdown'): string {
+export function formatOutput(result: AnalysisResult, format: 'console' | 'json' | 'markdown' | 'csv'): string {
   switch (format) {
     case 'json':
       return formatJSON(result)
     case 'markdown':
       return formatMarkdown(result)
+    case 'csv':
+      return formatCSV(result)
     default:
       return formatConsole(result)
   }

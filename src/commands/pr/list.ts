@@ -1,5 +1,6 @@
 import {Command, Flags, Args} from '@oclif/core'
 import {GitHubClient} from '../../lib/github.js'
+import {isCLIError} from '../../lib/errors.js'
 
 export default class PrList extends Command {
   static summary = 'List pull requests for a repository'
@@ -8,8 +9,9 @@ export default class PrList extends Command {
 This helps triage which PRs need attention by showing recent PRs with basic metadata.`
 
   static examples = [
-    '$ reviewflow pr:list owner/repo',
-    '$ reviewflow pr:list owner/repo --state open --limit 10',
+    '$ reviewflow pr:list vercel/next.js',
+    '$ reviewflow pr:list facebook/react --state open --limit 10',
+    '$ reviewflow pr:list owner/repo --state closed --limit 50',
   ]
 
   static flags = {
@@ -21,6 +23,10 @@ This helps triage which PRs need attention by showing recent PRs with basic meta
     limit: Flags.integer({
       description: 'Maximum number of PRs to list',
       default: 10,
+    }),
+    verbose: Flags.boolean({
+      description: 'Show detailed progress messages for debugging',
+      default: false,
     }),
   }
 
@@ -37,15 +43,21 @@ This helps triage which PRs need attention by showing recent PRs with basic meta
     const state = flags.state as string
     const limit = flags.limit as number
 
-    // Validate repo format
-    const repoMatch = repo.match(/^([^/]+)\/([^/]+)$/)
-    if (!repoMatch) {
+    const github = new GitHubClient()
+
+    // Validate repo format early
+    let owner: string
+    let repoName: string
+    try {
+      const parsed = github.parseRepository(repo)
+      owner = parsed.owner
+      repoName = parsed.repo
+    } catch (error) {
+      if (isCLIError(error)) {
+        this.error(error.message)
+      }
       this.error('Invalid repo format. Expected: owner/repo')
     }
-
-    const [, owner, repoName] = repoMatch
-
-    const github = new GitHubClient()
 
     if (!github.isAuthenticated()) {
       this.log('⚠️  Not authenticated with GitHub')
