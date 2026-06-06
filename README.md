@@ -12,14 +12,25 @@
 
 ## Installation
 
+**Via GitHub (Recommended):**
+
 ```bash
-npm install -g reviewflow
+# Clone the repository
+git clone https://github.com/eylulsenakumral/reviewflow-cli.git
+cd reviewflow-cli
+
+# Install dependencies
+npm install
+
+# Build and link globally
+npm run build
+npm link
 ```
 
-Or run without installing:
+**Or run directly with npx (requires npm):**
 
 ```bash
-npx reviewflow --version
+npx @eylulsenakumral/reviewflow-cli --version
 ```
 
 ## Quick Start
