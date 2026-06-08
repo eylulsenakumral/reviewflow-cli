@@ -21,11 +21,14 @@ AI coding assistants have flooded repos with PRs. Not all need deep review. Revi
 ### Install
 
 ```bash
-# Install globally via npm
-npm install -g @eylulsenakumral/reviewflow-cli
+# Fastest: npx from GitHub (no npm registry required)
+npx github:eylulsenakumral/reviewflow-cli --help
 
-# Or run directly with npx (no install)
-npx @eylulsenakumral/reviewflow-cli --version
+# Or create alias for convenience
+alias reviewflow="npx github:eylulsenakumral/reviewflow-cli"
+
+# Alternative: npm install from GitHub
+npm install github:eylulsenakumral/reviewflow-cli -g
 ```
 
 ### Authenticate
@@ -53,7 +56,23 @@ reviewflow analyze https://github.com/vercel/next.js/pull/94498
 
 ## Installation
 
-### Via npm (Recommended)
+### Option 1: npx from GitHub (Fastest — No npm registry required)
+
+```bash
+# Run directly without installation
+npx github:eylulsenakumral/reviewflow-cli --help
+
+# Or create a permanent alias (add to ~/.bashrc or ~/.zshrc)
+alias reviewflow="npx github:eylulsenakumral/reviewflow-cli"
+```
+
+### Option 2: npm global install (from GitHub)
+
+```bash
+npm install github:eylulsenakumral/reviewflow-cli -g
+```
+
+### Option 3: npm registry (when published)
 
 ```bash
 npm install -g @eylulsenakumral/reviewflow-cli
